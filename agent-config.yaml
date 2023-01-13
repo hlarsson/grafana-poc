@@ -1,0 +1,37 @@
+integrations:
+  agent:
+    enabled: true
+  prometheus_remote_write:
+    - basic_auth:
+        password: <insert password here>
+        username: <insert username here>
+      url: https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push
+logs:
+  configs:
+    - clients:
+        - basic_auth:
+            password: <insert password here>
+            username: <insert username here>
+          url: https://logs-prod-eu-west-0.grafana.net/loki/api/v1/push
+      name: integrations
+      positions:
+        filename: /tmp/positions.yaml
+      target_config:
+        sync_period: 10s
+metrics:
+  configs:
+    - name: integrations
+      remote_write:
+        - basic_auth:
+            password: <insert password here>
+            username: <insert username here>
+          url: https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push
+      scrape_configs:
+        - job_name: integrations/nodejs
+          static_configs:
+            - targets:
+                - localhost:4001
+  global:
+    scrape_interval: 60s
+  wal_directory: /tmp/grafana-agent-wal
+
